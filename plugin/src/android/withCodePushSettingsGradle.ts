@@ -23,9 +23,17 @@ const withCodePushSettingsGradle: ConfigPlugin = (config) => {
       const fileInfo = await AndroidConfig.Paths.getSettingsGradleAsync(
         config.modRequest.projectRoot,
       );
-      let contents = await fsPromises.readFile(fileInfo.path, "utf-8");
+      let contents = await fsPromises.readFile(
+        fileInfo.path,
+        "utf-8",
+        (err: any) => {
+          if (err) throw err;
+        },
+      );
       contents = modifySettingsGradle(contents);
-      await fsPromises.writeFile(fileInfo.path, contents);
+      await fsPromises.writeFile(fileInfo.path, contents, (err: any) => {
+        if (err) throw err;
+      });
       return config;
     },
   ]);

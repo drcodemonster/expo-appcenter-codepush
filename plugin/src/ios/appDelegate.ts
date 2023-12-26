@@ -35,7 +35,13 @@ export const withCodePushAppDelegate: ConfigPlugin = (config) => {
       const fileInfo = IOSConfig.Paths.getAppDelegate(
         config.modRequest.projectRoot,
       );
-      let contents = await fsPromises.readFile(fileInfo.path, "utf-8");
+      let contents = await fsPromises.readFile(
+        fileInfo.path,
+        "utf-8",
+        (err: any) => {
+          if (err) throw err;
+        },
+      );
       if (fileInfo.language === "objc" || fileInfo.language === "objcpp") {
         contents = modifyObjcAppDelegate(contents);
       } else {
@@ -44,7 +50,9 @@ export const withCodePushAppDelegate: ConfigPlugin = (config) => {
           `Cannot add CodePush code to AppDelegate of language "${fileInfo.language}"`,
         );
       }
-      await fsPromises.writeFile(fileInfo.path, contents);
+      await fsPromises.writeFile(fileInfo.path, contents, (err: any) => {
+        if (err) throw err;
+      });
 
       return config;
     },
