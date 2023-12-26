@@ -4,5 +4,5 @@
     "outDir": "./plugin/build"
   },
   "include": ["./plugin/src"],
-  "exclude": ["**/__mocks__/*", "**/__tests__/*"]
+  "exclude": ["**/__mocks__/*", "**/__tests__/*", "**/plugin/build/*"]
 }

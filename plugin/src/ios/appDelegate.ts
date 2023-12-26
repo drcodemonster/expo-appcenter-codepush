@@ -4,7 +4,8 @@ import {
   withDangerousMod,
 } from "@expo/config-plugins";
 
-const fsPromises = require("fs");
+const fsPromises = require("node:fs/promises");
+
 const methodInvocationBlock = `return [CodePush bundleURL]`;
 
 export function modifyObjcAppDelegate(contents: string): string {
@@ -35,13 +36,7 @@ export const withCodePushAppDelegate: ConfigPlugin = (config) => {
       const fileInfo = IOSConfig.Paths.getAppDelegate(
         config.modRequest.projectRoot,
       );
-      let contents = await fsPromises.readFile(
-        fileInfo.path,
-        "utf-8",
-        (err: any) => {
-          if (err) throw err;
-        },
-      );
+      let contents = await fsPromises.readFile(fileInfo.path, "utf-8");
       if (fileInfo.language === "objc" || fileInfo.language === "objcpp") {
         contents = modifyObjcAppDelegate(contents);
       } else {
@@ -50,9 +45,7 @@ export const withCodePushAppDelegate: ConfigPlugin = (config) => {
           `Cannot add CodePush code to AppDelegate of language "${fileInfo.language}"`,
         );
       }
-      await fsPromises.writeFile(fileInfo.path, contents, (err: any) => {
-        if (err) throw err;
-      });
+      await fsPromises.writeFile(fileInfo.path, contents);
 
       return config;
     },

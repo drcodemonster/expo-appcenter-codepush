@@ -4,7 +4,7 @@ import {
   withDangerousMod,
 } from "@expo/config-plugins";
 
-const fsPromises = require("fs");
+const fsPromises = require("node:fs/promises");
 const codePushImport = "import com.microsoft.codepush.react.CodePush;";
 const bundleOverride = `@Override
 protected String getJSBundleFile() {
@@ -36,17 +36,9 @@ const withCodePushMainApplication: ConfigPlugin = (config) => {
       const fileInfo = await AndroidConfig.Paths.getMainApplicationAsync(
         config.modRequest.projectRoot,
       );
-      let contents = await fsPromises.readFile(
-        fileInfo.path,
-        "utf-8",
-        (err: any) => {
-          if (err) throw err;
-        },
-      );
+      let contents = await fsPromises.readFile(fileInfo.path, "utf-8");
       contents = modifyMainApplication(contents);
-      await fsPromises.writeFile(fileInfo.path, contents, (err: any) => {
-        if (err) throw err;
-      });
+      await fsPromises.writeFile(fileInfo.path, contents);
       return config;
     },
   ]);

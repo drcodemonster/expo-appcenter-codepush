@@ -4,7 +4,7 @@ import {
   withDangerousMod,
 } from "@expo/config-plugins";
 
-const fsPromises = require("fs");
+const fsPromises = require("node:fs/promises");
 
 const gradleModules = `apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"`;
 
@@ -26,17 +26,9 @@ const withCodePushAppBuildGradle: ConfigPlugin = (config) => {
       const fileInfo = await AndroidConfig.Paths.getAppBuildGradleAsync(
         config.modRequest.projectRoot,
       );
-      let contents = await fsPromises.readFile(
-        fileInfo.path,
-        "utf-8",
-        (err: any) => {
-          if (err) throw err;
-        },
-      );
+      let contents = await fsPromises.readFile(fileInfo.path, "utf-8");
       contents = modifyAppBuildGradle(contents);
-      await fsPromises.writeFile(fileInfo.path, contents, (err: any) => {
-        if (err) throw err;
-      });
+      await fsPromises.writeFile(fileInfo.path, contents);
       return config;
     },
   ]);
