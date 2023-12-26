@@ -1,31 +1,37 @@
-import fs from 'fs/promises';
-import { AndroidConfig, ConfigPlugin, withDangerousMod } from "@expo/config-plugins";
+import {
+  AndroidConfig,
+  ConfigPlugin,
+  withDangerousMod,
+} from "@expo/config-plugins";
 
-const gradleModules = `apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"`
+const fsPromises = require("fs");
+
+const gradleModules = `apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"`;
 
 const modifyAppBuildGradle = (contents: string): string => {
   if (!contents.includes(gradleModules)) {
     contents = contents.replace(
-      "apply from: new File(reactNativeRoot, \"react.gradle\")",
+      'apply from: new File(reactNativeRoot, "react.gradle")',
       `apply from: new File(reactNativeRoot, "react.gradle")
-${gradleModules}`
+${gradleModules}`,
     );
   }
   return contents;
-}
-
+};
 
 const withCodePushAppBuildGradle: ConfigPlugin = (config) => {
   return withDangerousMod(config, [
     "android",
     async (config) => {
-      const fileInfo = await AndroidConfig.Paths.getAppBuildGradleAsync(config.modRequest.projectRoot);
-      let contents = await fs.readFile(fileInfo.path, "utf-8");
+      const fileInfo = await AndroidConfig.Paths.getAppBuildGradleAsync(
+        config.modRequest.projectRoot,
+      );
+      let contents = await fsPromises.readFile(fileInfo.path, "utf-8");
       contents = modifyAppBuildGradle(contents);
-      await fs.writeFile(fileInfo.path, contents);
+      await fsPromises.writeFile(fileInfo.path, contents);
       return config;
-    }]
-  )
-}
+    },
+  ]);
+};
 
 export default withCodePushAppBuildGradle;

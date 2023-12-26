@@ -28,6 +28,7 @@
     "expo-module": "expo-module"
   },
   "devDependencies": {
+    "@types/node": "^20.10.5",
     "expo-module-scripts": "^3.1.0"
   },
   "dependencies": {

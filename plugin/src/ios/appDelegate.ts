@@ -3,8 +3,8 @@ import {
   IOSConfig,
   withDangerousMod,
 } from "@expo/config-plugins";
-import fs from "fs/promises";
 
+const fsPromises = require("fs");
 const methodInvocationBlock = `return [CodePush bundleURL]`;
 
 export function modifyObjcAppDelegate(contents: string): string {
@@ -13,7 +13,7 @@ export function modifyObjcAppDelegate(contents: string): string {
     contents = contents.replace(
       /#import "AppDelegate.h"/g,
       `#import "AppDelegate.h"
-#import <CodePush/CodePush.h>`
+#import <CodePush/CodePush.h>`,
     );
   }
 
@@ -21,7 +21,7 @@ export function modifyObjcAppDelegate(contents: string): string {
   if (!contents.includes(methodInvocationBlock)) {
     contents = contents.replace(
       /return \[\[NSBundle mainBundle\] URLForResource\:\@\"main\" withExtension\:\@\"jsbundle\"\]/g,
-      `${methodInvocationBlock}`
+      `${methodInvocationBlock}`,
     );
   }
 
@@ -33,18 +33,18 @@ export const withCodePushAppDelegate: ConfigPlugin = (config) => {
     "ios",
     async (config) => {
       const fileInfo = IOSConfig.Paths.getAppDelegate(
-        config.modRequest.projectRoot
+        config.modRequest.projectRoot,
       );
-      let contents = await fs.readFile(fileInfo.path, "utf-8");
-      if (fileInfo.language === "objc" || fileInfo.language === "objcpp" ) {
+      let contents = await fsPromises.readFile(fileInfo.path, "utf-8");
+      if (fileInfo.language === "objc" || fileInfo.language === "objcpp") {
         contents = modifyObjcAppDelegate(contents);
       } else {
         // TODO: Support Swift
         throw new Error(
-          `Cannot add CodePush code to AppDelegate of language "${fileInfo.language}"`
+          `Cannot add CodePush code to AppDelegate of language "${fileInfo.language}"`,
         );
       }
-      await fs.writeFile(fileInfo.path, contents);
+      await fsPromises.writeFile(fileInfo.path, contents);
 
       return config;
     },

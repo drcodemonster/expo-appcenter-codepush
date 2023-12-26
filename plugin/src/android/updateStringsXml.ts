@@ -4,12 +4,15 @@ import {
   withStringsXml,
 } from "@expo/config-plugins";
 
-export const WithCodePushStringXML: ConfigPlugin<string> = (config, codePushKey) => {
+export const WithCodePushStringXML: ConfigPlugin<string> = (
+  config,
+  codePushKey,
+) => {
   return withStringsXml(config, (config) => {
     config.modResults = setStrings(
       config.modResults,
       "CodePushDeploymentKey",
-      codePushKey
+      codePushKey,
     );
     return config;
   });
@@ -18,7 +21,7 @@ export const WithCodePushStringXML: ConfigPlugin<string> = (config, codePushKey)
 function setStrings(
   strings: AndroidConfig.Resources.ResourceXML,
   name: string,
-  value: string
+  value: string,
 ) {
   // Helper to add string.xml JSON items or overwrite existing items with the same name.
   return AndroidConfig.Strings.setStringItem(
@@ -27,6 +30,6 @@ function setStrings(
       //   { $: { name: 'expo_custom_value', translatable: 'false' }, _: value },
       { $: { name, translatable: "false" }, _: value },
     ],
-    strings
+    strings,
   );
 }
