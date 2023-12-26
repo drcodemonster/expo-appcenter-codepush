@@ -9,7 +9,7 @@ const settingsString = `include ':app', ':react-native-code-push'
 project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')`;
 
 const modifySettingsGradle = (contents: string): string => {
-  if (!contents.includes(settingsString)) {
+  if (contents && !contents.includes(settingsString)) {
     contents = `${contents}
 ${settingsString}`;
   }

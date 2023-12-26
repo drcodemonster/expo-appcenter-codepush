@@ -9,7 +9,7 @@ const methodInvocationBlock = `return [CodePush bundleURL]`;
 
 export function modifyObjcAppDelegate(contents: string): string {
   // Add import
-  if (!contents.includes("#import <CodePush/CodePush.h>")) {
+  if (contents && !contents.includes("#import <CodePush/CodePush.h>")) {
     contents = contents.replace(
       /#import "AppDelegate.h"/g,
       `#import "AppDelegate.h"
@@ -18,7 +18,7 @@ export function modifyObjcAppDelegate(contents: string): string {
   }
 
   // Set url for bridge
-  if (!contents.includes(methodInvocationBlock)) {
+  if (contents && !contents.includes(methodInvocationBlock)) {
     contents = contents.replace(
       /return \[\[NSBundle mainBundle\] URLForResource\:\@\"main\" withExtension\:\@\"jsbundle\"\]/g,
       `${methodInvocationBlock}`,

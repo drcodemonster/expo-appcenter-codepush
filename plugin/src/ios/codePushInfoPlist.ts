@@ -1,4 +1,4 @@
-import { ConfigPlugin, InfoPlist, withInfoPlist } from "@expo/config-plugins";
+import { ConfigPlugin, withInfoPlist } from "@expo/config-plugins";
 
 // Pass `<string>` to specify that this plugin requires a string property.
 export const codePushInfoPlist: ConfigPlugin<string> = (config, id) => {

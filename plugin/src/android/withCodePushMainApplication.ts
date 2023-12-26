@@ -12,14 +12,14 @@ protected String getJSBundleFile() {
 }`;
 const reactNativeHostEntry = `new ReactNativeHost(this) {`;
 const modifyMainApplication = (contents: string): string => {
-  if (!contents.includes(codePushImport)) {
+  if (contents && !contents.includes(codePushImport)) {
     contents = contents.replace(
       /package com\.shix\;/g,
       `package com.shix;
 ${codePushImport}`,
     );
   }
-  if (!contents.includes("return CodePush.getJSBundleFile();")) {
+  if (contents && !contents.includes("return CodePush.getJSBundleFile();")) {
     contents = contents.replace(
       /new ReactNativeHost\(this\) \{/g,
       `${reactNativeHostEntry}

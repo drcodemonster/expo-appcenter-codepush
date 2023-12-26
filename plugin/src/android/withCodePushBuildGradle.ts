@@ -9,7 +9,7 @@ const fsPromises = require("fs");
 const gradleModules = `apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"`;
 
 const modifyAppBuildGradle = (contents: string): string => {
-  if (!contents.includes(gradleModules)) {
+  if (contents && !contents.includes(gradleModules)) {
     contents = contents.replace(
       'apply from: new File(reactNativeRoot, "react.gradle")',
       `apply from: new File(reactNativeRoot, "react.gradle")
