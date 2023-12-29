@@ -1,3 +1,5 @@
 node_modules
 plugin/build
 *.tgz
+yarn.lock
+package-lock.json
